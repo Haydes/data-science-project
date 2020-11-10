@@ -80,7 +80,7 @@ class CollectRepo():
         for repo in self.list_of_repositories:
             language_count = len(repo['language_dictionary'])
             character_count = len(str(repo['description']))
-            if language_count > 1 and character_count > 20:
+            if language_count >= 1 and character_count > 20:
                 updated_repos.append(repo)
         self.list_of_repositories = updated_repos
         
