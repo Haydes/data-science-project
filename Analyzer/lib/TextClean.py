@@ -17,9 +17,10 @@ class TextClean():
         pass 
 
     def CleanText(self, Text):
-        Text = Text.lower()
+        Text = str (Text)
         Text = re.sub(r'[+|/]', ' and ', Text)
         Text = re.sub(r'[^\w\d,]', ' ', Text)
+        Text = Text.lower()
         words = Text.split()
         words = [re.sub(r'[^a-z]', '', word) for word in words if word.isalnum()]
         Text = ' '.join(words)

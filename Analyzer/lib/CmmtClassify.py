@@ -8,9 +8,12 @@ import time
 import pandas as pd
 import os
 import csv
+from datetime import datetime
 from sklearn.naive_bayes import GaussianNB
 from lib.TextClean import TextClean
 TC = TextClean () 
+
+COMMIT_NUM = 200000
 
 class CmmtClassify():
     def __init__(self):
@@ -130,6 +133,7 @@ class CmmtClassify():
                     Writer.writerow(row)
         File.close()
 
+
     def ClassifyLogs (self, RepoFile="Repository_List.csv"):
         CmmtDir = "data/CmmtSet"
         TragetDir = "result/CmmtSet"
@@ -140,16 +144,21 @@ class CmmtClassify():
             RepoId = PRow ['id']
             CommitFile = CmmtDir + "/" + str (RepoId) + ".csv"
             ResultFile = TragetDir + "/" + str (RepoId) + ".csv"
-            print ("classify ", CommitFile)
+
+            now = datetime.now().time()
+            print (now, "[", PIndex, "/", len(PDF), "]", ":classify ", CommitFile, " -> ", end=" ")
             
             if os.path.exists(ResultFile):
+                print (" ")
                 continue;
              
             if self.IsExist (CommitFile) == False:
+                print (" ")
                 continue
     
             Vulnerabilities = {}
-            CDF = pd.read_csv(CommitFile)         
+            CDF = pd.read_csv(CommitFile)
+            print (" [", len(CDF), "]")
             for CIndex, CRow in CDF.iterrows():
                 Clf = self.Predict (CRow['message'])
                 Num = Vulnerabilities.get (Clf)
@@ -157,6 +166,8 @@ class CmmtClassify():
                     Vulnerabilities [Clf] = 1
                 else:
                     Vulnerabilities [Clf] += 1
+                if CIndex >= COMMIT_NUM:
+                    break;
 
             
             self.WriteResults (ResultFile, Vulnerabilities)  

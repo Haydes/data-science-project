@@ -4,6 +4,8 @@ import os
 import sys, getopt
 from lib.TrainLogs import TrainLogs
 from lib.CmmtClassify import CmmtClassify
+from lib.Analyzer import Analyzer
+
 
 
 def main(argv):
@@ -36,8 +38,10 @@ def main(argv):
         CC.Fit ("Train.txt", "TrainLabel.txt")
         CC.Validate ("Test.txt", "TestLabel.txt")
         CC.ClassifyLogs ()
+    if Action == "analysis":
+        Alz = Analyzer ()
+        Alz.Process ()
 
-   
 
 if __name__ == "__main__":
    main(sys.argv[1:])
