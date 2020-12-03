@@ -1,0 +1,118 @@
+---
+title: "Project"
+author: "WenLi"
+date: "11/25/2020"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(fig.width=8, fig.height=2, fig.align = 'center', message=FALSE, warning=FALSE)
+library(kableExtra)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+APIKey="AIzaSyD6tKTjd7whQi98jBxZ-tfSBfPt9AyRmtI"
+```
+
+## R Markdown
+
+
+```{r cars}
+Original = read.csv("LangProj_Stats.csv", na.strings="?")
+LangProj_Stats.csv     = na.omit(Original)
+kable(head(LangProj_Stats.csv), format = "latex", booktabs = T, caption="LangProj_Stats.csv")%>%
+    kable_styling(latex_options = c("hold_position"))
+
+ggplot(data=LangProj_Stats.csv, aes(x=LanguageNum, y=Percentage)) + geom_point() + geom_smooth() +
+       labs(x="number of languages", y="distribution of projects") +
+       theme(plot.title = element_text(hjust = 0.5)) 
+ggsave("LangProj_Stats.pdf")
+```
+
+```{r}
+
+# Get the coordinates of all locations
+Original  = read.csv("RegionDistribute.csv", na.strings="?")
+ggplot(data=Original, aes(x = No, y = liveness)) + geom_bar(stat="identity", width=0.5) +
+      scale_x_continuous(breaks = c(1, 2, 3, 4,5,6,7,8,9,10), labels = c("China", "US", "India", "Germany", "UK", "Japan", "Canda", "France", "Russia", "Brazil")) + 
+      labs(x="country", y="distribution of contribution") +
+      theme(plot.title = element_text(hjust = 0.5)) 
+ggsave("CountryLiveness.pdf")
+```
+
+```{r}
+
+# Get the coordinates of all locations
+Original  = read.csv("Evolve_Language_Stats.csv", na.strings="?")
+ggplot(data=Original, aes(x = No, y = count)) + geom_point() + geom_smooth() +
+  scale_x_continuous(breaks = c(1,2,3,4,5,6,7,8,9,10), labels = c("2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019")) +
+      labs(x="year", y="number of languages") +
+      theme(plot.title = element_text(hjust = 0.5)) 
+ggsave("Evolve_Language_Stats.pdf")
+
+
+```
+
+
+```{r}
+# Get trending projects
+Original  = read.csv("TrendindProjs.csv", na.strings="?")
+ggplot(data=Original, aes(x = No, y = contribution)) + geom_bar(stat="identity", width=0.5) +
+      scale_x_continuous(breaks = c(1, 2, 3, 4,5,6,7,8,9,10), labels = c("Vscode", "Azure-docs", "Flutter", "Firstcontributions", "Tensorflow", "Facebook", "Kubernetes", "DefinitelyTyped", "Ansible", "Home-assistant")) + 
+      labs(x="project", y="contributions (times(K))") +
+      theme(plot.title = element_text(hjust = 0.5)) 
+ggsave("TrendindProjs.pdf")
+
+```
+
+
+```{r}
+# Get trending projects
+Original  = read.csv("GrowingTrendindProjs.csv", na.strings="?")
+ggplot(data=Original, aes(x = No, y = contribution)) + geom_bar(stat="identity", width=0.5) +
+      scale_x_continuous(breaks = c(1, 2, 3, 4,5,6,7,8,9,10), labels = c("AspNetCore", "Flutter", "Vsts-docs", "Istio", "Amplify-js", "Charts", "Proton", "Gatsby", "Storybook", "Cypress")) + 
+      labs(x="project", y="contribution growth rate") +
+      theme(plot.title = element_text(hjust = 0.5)) 
+ggsave("GrowingTrendindProjs.pdf")
+
+```
+
+
+
+```{r}
+Original = read.csv("RepoStat.csv", na.strings="?")
+Auto     = na.omit(Original)
+kable(head(Auto), format = "latex", booktabs = T, caption="Dataset of RepoStat.csv")%>%
+    kable_styling(latex_options = c("hold_position"))
+
+
+#Vulb1Num
+VulbData = select (Auto, -Vulb2Num, -Vulb3Num, -Vulb4Num)
+LinearReg = lm(Vulb1Num ~ LangNum+AuthorNum+CmmtNum+C+CPP+RUBY+JAVA+SHELL+PHP+CSHP+PYTHON+JAVASCRIPT+TYPESCRIPT, data = VulbData)
+summary (LinearReg)
+par(mfrow=c(1,4))
+plot(LinearReg)
+
+#Vulb2Num
+VulbData = select (Auto, -Vulb1Num, -Vulb3Num, -Vulb4Num)
+LinearReg = lm(Vulb2Num ~ LangNum+AuthorNum+CmmtNum+C+CPP+RUBY+JAVA+SHELL+PHP+CSHP+PYTHON+JAVASCRIPT+TYPESCRIPT, data = VulbData)
+summary (LinearReg)
+par(mfrow=c(1,4))
+plot(LinearReg)
+
+#Vulb3Num
+VulbData = select (Auto, -Vulb1Num, -Vulb2Num, -Vulb4Num)
+LinearReg = lm(Vulb3Num ~ LangNum+AuthorNum+CmmtNum+C+CPP+RUBY+JAVA+SHELL+PHP+CSHP+PYTHON+JAVASCRIPT+TYPESCRIPT, data = VulbData)
+summary (LinearReg)
+par(mfrow=c(1,4))
+plot(LinearReg)
+
+#Vulb4Num
+VulbData = select (Auto, -Vulb1Num, -Vulb2Num, -Vulb3Num)
+LinearReg = lm(Vulb4Num ~ LangNum+AuthorNum+CmmtNum+C+CPP+RUBY+JAVA+SHELL+PHP+CSHP+PYTHON+JAVASCRIPT+TYPESCRIPT, data = VulbData)
+summary (LinearReg)
+par(mfrow=c(1,4))
+plot(LinearReg)
+```
+
+
